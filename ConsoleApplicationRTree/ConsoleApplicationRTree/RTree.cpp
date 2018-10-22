@@ -17,28 +17,36 @@ RTree::~RTree()
 {}
 
 void RTree::Insert(Rect entry) {
-    std::shared_ptr<Node> leaf2;
-    auto leaf1 = this->ChooseLeaf(entry);
+    //std::shared_ptr<Node> leaf2;
+    auto leaf = this->ChooseLeaf(entry);
 
-    leaf1->Add(std::make_shared<Node>(std::move(entry), true));
+    leaf->Add(std::make_shared<Node>(std::move(entry), true));
 
-    if (leaf1->Count() > this->maxEntryCount) {
-        auto split = this->SplitNode(std::move(leaf1));
+    if (leaf->Count() > this->maxEntryCount) {
+        auto split = this->SplitNode(leaf);
         assert(split.leaf1 && split.leaf2);
 
-        leaf1 = std::move(split.leaf1);
-        leaf2 = std::move(split.leaf2);
+        auto parent = leaf->parent.lock();
+        if (parent) {
+            auto it = std::find(parent->child.begin(), parent->child.end(), leaf);
+            parent->child.erase(it);
+
+            // <parent> will be valid after <leaf> was removed and new <leafs> were added
+            // this is because <leafs> have same rectangle as <leaf> which were added previously and consequently updated <parents>'s rectandle inside <Add> method
+            parent->Add(split.leaf1);
+            parent->Add(split.leaf2);
+
+            this->AdjustTree(split.leaf1, split.leaf2);
+        }
+
+        // must be always not NULL
+        assert(split.leaf1);
+
+        // after <SplitNode> and <AdjustTree> leaf2 must be null or it must be root node because of root split
+        assert(!split.leaf2 || (split.leaf2 && split.leaf2->Root()));
+
+        this->GrowTreeTaller(std::move(split.leaf1), std::move(split.leaf2));
     }
-
-    // leaf2 must not have parent
-    // <AdjustTree> will fix this
-    assert(!leaf2 || (leaf2 && leaf2->parent.expired()));
-
-    // parent's rect of leaf1 is invalid
-    // <AdjustTree> will fix this
-    this->AdjustTree(leaf1, leaf2);
-
-    this->GrowTreeTaller(std::move(leaf1), std::move(leaf2));
 }
 
 std::shared_ptr<Node> RTree::ChooseLeaf(const Rect &entry) {
@@ -94,7 +102,7 @@ void RTree::GrowTreeTaller(std::shared_ptr<Node> root1, std::shared_ptr<Node> ro
     this->root->Add(std::move(root2));
 }
 
-RTree::SplitNodeRes RTree::SplitNode(std::shared_ptr<Node> node) {
+RTree::SplitNodeRes RTree::SplitNode(std::shared_ptr<Node> &node) {
     auto seedsIdx = this->PickSeeds(node);
     auto group1 = std::make_shared<Node>();
     auto group2 = std::make_shared<Node>();
@@ -148,16 +156,6 @@ RTree::SplitNodeRes RTree::SplitNode(std::shared_ptr<Node> node) {
     res.leaf1 = std::move(group1);
     res.leaf2 = std::move(group2);
 
-    auto parent = node->parent.lock();
-    if (parent) {
-        res.leaf1->parent = parent;
-
-        auto it = std::find(parent->child.begin(), parent->child.end(), node);
-        parent->child.erase(it);
-
-        parent->Add(res.leaf1);
-    }
-
     return res;
 }
 
@@ -166,7 +164,50 @@ void RTree::AdjustTree(std::shared_ptr<Node> &leaf1, std::shared_ptr<Node> &leaf
     auto &node2 = leaf2;
 
     while (!node1->Root()) {
-        assert(false);
+        assert((!node2) || (node2->parent.lock() == node1->parent.lock()));
+
+        auto parent = node1->parent.lock();
+
+        // must be true because node1 is not a root
+        assert(parent);
+
+        if (parent->Count() > this->maxEntryCount) {
+            auto split = this->SplitNode(parent);
+            assert(split.leaf1 && split.leaf2);
+
+            auto parent2 = parent->parent.lock();
+            if (parent2) {
+                auto it = std::find(parent2->child.begin(), parent2->child.end(), parent);
+                parent2->child.erase(it);
+
+                // <parent> will be valid after <leaf> was removed and new <leafs> were added
+                // this is because <leafs> have same rectangle as <leaf> which were added previously and consequently updated <parents>'s rectandle inside <Add> method
+                parent2->Add(split.leaf1);
+                parent2->Add(split.leaf2);
+            }
+
+            node1 = std::move(split.leaf1);
+            node2 = std::move(split.leaf2);
+        }
+        else if(leaf2 == nullptr) {
+            // when no split were performed then rectangle must be adjusted
+            // this is needed because lower node is grew up
+
+            Rect r = Rect::Degenerated();
+
+            for (auto &i : parent->child) {
+                r.Union(i->rect);
+            }
+
+            parent->rect = r;
+        }
+        else {
+            // node was split on previous iteration
+            // rectangle of its parent is therefore valid
+            // because no further slip is needed node2 is set to null to force algorithm to update rectangle of upper parents because whey are NOT valid
+            node1 = std::move(parent);
+            node2 = nullptr;
+        }
     }
 }
 

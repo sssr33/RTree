@@ -24,7 +24,7 @@ private:
         std::shared_ptr<Node> leaf2;
     };
 
-    SplitNodeRes SplitNode(std::shared_ptr<Node> node);
+    SplitNodeRes SplitNode(std::shared_ptr<Node> &node);
     void AdjustTree(std::shared_ptr<Node> &leaf1, std::shared_ptr<Node> &leaf2);
 
     // quadratic cost algorithm
