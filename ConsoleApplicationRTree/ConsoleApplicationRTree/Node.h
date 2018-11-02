@@ -10,6 +10,12 @@ struct Node : std::enable_shared_from_this<Node> {
     Node();
     Node(Rect rect);
     Node(Rect rect, bool hasData);
+    Node(const Node &other);
+    Node(Node &&other);
+
+    Node &operator=(Node other);
+
+    friend void swap(Node &a, Node &b);
 
     // leaf
     bool Leaf() const;
@@ -25,4 +31,6 @@ struct Node : std::enable_shared_from_this<Node> {
 
 private:
     bool hasData;
+
+    static std::shared_ptr<Node> Copy(const std::shared_ptr<const Node> &other, const std::shared_ptr<Node> &_this, const Node &replaceWithThis);
 };

@@ -7,6 +7,8 @@
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Helpers.cpp" />
+    <ClCompile Include="RTreeRenderer\RTreeWindow.cpp" />
+    <ClCompile Include="RTreeRenderer\RTreeRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -14,5 +16,7 @@
     <ClInclude Include="Rect.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Helpers.h" />
+    <ClInclude Include="RTreeRenderer\RTreeWindow.h" />
+    <ClInclude Include="RTreeRenderer\RTreeRenderer.h" />
   </ItemGroup>
 </Project>

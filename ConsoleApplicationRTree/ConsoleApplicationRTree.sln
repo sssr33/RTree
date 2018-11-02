@@ -7,7 +7,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleApplicationRTree", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleApplicationRTree_Old", "ConsoleApplicationRTree_Old\ConsoleApplicationRTree_Old.vcxproj", "{728C64FC-AA87-4214-8E4E-3D0D8F7A7B75}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Helpers", "Helpers", "{6456161A-2723-4425-B081-C7E4B2C72E11}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Helpers", "Helpers\Helpers\Helpers.vcxitems", "{DFE61D1B-7BCA-41CB-AA59-C2E000051D8E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Helpers.sl.Desktop", "Helpers\Helpers.sl.Desktop\Helpers.sl.Desktop.vcxproj", "{B469DACA-1AD8-448A-B5C0-AE929F05C08E}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Helpers\Helpers\Helpers.vcxitems*{b469daca-1ad8-448a-b5c0-ae929f05c08e}*SharedItemsImports = 4
+		Helpers\Helpers\Helpers.vcxitems*{dfe61d1b-7bca-41cb-aa59-c2e000051d8e}*SharedItemsImports = 9
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
@@ -31,9 +41,21 @@ Global
 		{728C64FC-AA87-4214-8E4E-3D0D8F7A7B75}.Release|x64.Build.0 = Release|x64
 		{728C64FC-AA87-4214-8E4E-3D0D8F7A7B75}.Release|x86.ActiveCfg = Release|Win32
 		{728C64FC-AA87-4214-8E4E-3D0D8F7A7B75}.Release|x86.Build.0 = Release|Win32
+		{B469DACA-1AD8-448A-B5C0-AE929F05C08E}.Debug|x64.ActiveCfg = Debug|x64
+		{B469DACA-1AD8-448A-B5C0-AE929F05C08E}.Debug|x64.Build.0 = Debug|x64
+		{B469DACA-1AD8-448A-B5C0-AE929F05C08E}.Debug|x86.ActiveCfg = Debug|Win32
+		{B469DACA-1AD8-448A-B5C0-AE929F05C08E}.Debug|x86.Build.0 = Debug|Win32
+		{B469DACA-1AD8-448A-B5C0-AE929F05C08E}.Release|x64.ActiveCfg = Release|x64
+		{B469DACA-1AD8-448A-B5C0-AE929F05C08E}.Release|x64.Build.0 = Release|x64
+		{B469DACA-1AD8-448A-B5C0-AE929F05C08E}.Release|x86.ActiveCfg = Release|Win32
+		{B469DACA-1AD8-448A-B5C0-AE929F05C08E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DFE61D1B-7BCA-41CB-AA59-C2E000051D8E} = {6456161A-2723-4425-B081-C7E4B2C72E11}
+		{B469DACA-1AD8-448A-B5C0-AE929F05C08E} = {6456161A-2723-4425-B081-C7E4B2C72E11}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {496F2049-CC6C-44A4-8DAE-245C3FE5C9B0}

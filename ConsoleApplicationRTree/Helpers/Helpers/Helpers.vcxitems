@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{DFE61D1B-7BCA-41CB-AA59-C2E000051D8E}</ItemsProjectGuid>
+    <ItemsRootNamespace>Helpers</ItemsRootNamespace>
+    <ItemsProjectName>Helpers</ItemsProjectName>
+    <CodeSharingProject>248F659F-DAC5-46E8-AC09-60EC9FC95053</CodeSharingProject>
+    <ItemsSccProjectName>SAK</ItemsSccProjectName>
+    <ItemsSccAuxPath>SAK</ItemsSccAuxPath>
+    <ItemsSccLocalPath>SAK</ItemsSccLocalPath>
+    <ItemsSccProvider>SAK</ItemsSccProvider>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\algorithm2.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Aligned.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\AlignedAllocator.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\another_name.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\CompositObject.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\config.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Containers\comptr_array.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Containers\comptr_vector.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Containers\PolyVector.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\cvt_type.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D2DCtxMt.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D3dStructWrappers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Dx.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\DxDevice.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\DxDeviceCtx.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\DxDeviceMt.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\DxHelpers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\DxIncludes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Layers.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Layers\DxLayerStack.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Layers\DxLayerStackResources.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Layers\DxLayerStackState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\MappedResource.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\D3D11ImageIOutput.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\HwndOutput.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\HwndRenderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\IOutput.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\IRenderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\ISurface9Access.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\OrientationTypes.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\SwapChainPanelOutput.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\Texture9On11Output.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\Texture9On11Renderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\WinRtRenderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\ShaderType.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\BlendState\BlendStateCache.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\D2DTargetState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\D2DTransformState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\D3DTargetState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\OMBlendState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\OMRenderTargetState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\PSShaderResourceState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\RenderTargetState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\RSScissorState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\RSState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\RSViewportState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\ShaderResourcesState.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Dx\XMVectorBox.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\fnv1.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HColor.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HData.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HJson.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HMath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HMathCP.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HResultException.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HSystem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\HText.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\jsonNative\dist\json\json-forwards.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\jsonNative\dist\json\json.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Macros.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\MemoryPool\MemoryPool.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\MemoryPool\SmartMemoryPool.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Metainfo\PointerGetter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Metainfo\RawType.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Metainfo\Signature.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\meta\for_each_in_tuple.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\meta\seq.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\meta\tuple_index.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\meta\vartype_index.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\meta\VisBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\meta\VisWrapper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\meta\ZeroDefaultValue.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\ObservableToken.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Observer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\ScopedPushBase.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\ScopedValue.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\StopWatch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Structs.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Text\UriCodec.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Thread\condition_variable.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Thread\critical_section.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Thread\critical_section_base.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Thread\critical_section_guard.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Thread\fifo_critical_section.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\ToString.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\TypeConverter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\TypeConverterCP.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\typeswitch.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UniqueHandle.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UPtrVirtualDeleter.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UtfConvert.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\var_ptr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Window\Window.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowBaseData.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowContainer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowMain.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D2DCtxMt.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\D3dStructWrappers.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\DxDevice.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\DxDeviceCtx.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\DxDeviceMt.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Layers\DxLayerStack.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Layers\DxLayerStackResources.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Layers\DxLayerStackState.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\MappedResource.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\D3D11ImageIOutput.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\HwndOutput.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\IOutput.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\IRenderer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\SwapChainPanelOutput.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\Renderer\Texture9On11Output.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\BlendState\BlendStateCache.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\D2DTargetState.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\D2DTransformState.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\OMBlendState.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\State\RSState.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Dx\XMVectorBox.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\HColor.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\HData.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\HJson.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\HMath.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\HMathCP.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\HResultException.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\HSystem.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\HText.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\jsonNative\dist\jsoncpp.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\MemoryPool\SmartMemoryPool.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Structs.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Text\UriCodec.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Thread\condition_variable.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Thread\critical_section.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Thread\critical_section_base.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Thread\fifo_critical_section.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\ToString.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\TypeConverter.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\UniqueHandle.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Window\Window.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowBaseData.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Window\WindowMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)libhelpers\MemoryPool\MemoryPool.hpp" />
+    <None Include="$(MSBuildThisFileDirectory)libhelpers\MemoryPool\README.md" />
+  </ItemGroup>
+</Project>

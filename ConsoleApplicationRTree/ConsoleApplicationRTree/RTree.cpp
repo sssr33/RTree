@@ -200,6 +200,8 @@ void RTree::AdjustTree(std::shared_ptr<Node> &leaf1, std::shared_ptr<Node> &leaf
             }
 
             parent->rect = r;
+
+            node1 = std::move(parent);
         }
         else {
             // node was split on previous iteration
