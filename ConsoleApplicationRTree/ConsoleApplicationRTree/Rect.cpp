@@ -10,6 +10,21 @@ Rect::Rect(int left, int top, int right, int bottom)
     : left(left), top(top), right(right), bottom(bottom)
 {}
 
+bool Rect::operator==(const Rect &other) const {
+    bool equ =
+        this->left == other.left
+        && this->top == other.top
+        && this->right == other.right
+        && this->bottom == other.bottom;
+
+    return equ;
+}
+
+bool Rect::operator!=(const Rect &other) const {
+    bool equ = *this == other;
+    return !equ;
+}
+
 int Rect::Width() const {
     int width = this->right - this->left;
     return width;

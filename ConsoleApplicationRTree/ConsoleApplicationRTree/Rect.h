@@ -9,6 +9,9 @@ struct Rect {
     Rect();
     Rect(int left, int top, int right, int bottom);
 
+    bool operator==(const Rect &other) const;
+    bool operator!=(const Rect &other) const;
+
     int Width() const;
     int Height() const;
 

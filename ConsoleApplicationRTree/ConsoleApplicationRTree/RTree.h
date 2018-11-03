@@ -10,6 +10,10 @@ public:
 
     void Insert(Rect entry);
 
+    const std::shared_ptr<const Node> GetRoot() const {
+        return this->root;
+    }
+
 private:
     size_t minEntryCount;
     size_t maxEntryCount;

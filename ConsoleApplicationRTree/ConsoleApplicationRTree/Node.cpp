@@ -16,19 +16,19 @@ Node::Node(Rect rect, bool hasData)
     , hasData(hasData)
 {}
 
-Node::Node(const Node &other) {
-    auto otherRoot = other.shared_from_this();
-    auto otherParent = otherRoot->parent.lock();
-
-    while (otherParent) {
-        otherRoot = otherParent;
-        otherParent = otherRoot->parent.lock();
-    }
-
-    auto thisShared = this->shared_from_this();
-
-    Node::Copy(otherRoot, thisShared, other);
-}
+//Node::Node(const Node &other) {
+//    auto otherRoot = other.shared_from_this();
+//    auto otherParent = otherRoot->parent.lock();
+//
+//    while (otherParent) {
+//        otherRoot = otherParent;
+//        otherParent = otherRoot->parent.lock();
+//    }
+//
+//    auto thisShared = this->shared_from_this();
+//
+//    Node::Copy(otherRoot, thisShared, other);
+//}
 
 Node::Node(Node &&other)
     : Node()
@@ -68,6 +68,37 @@ void Node::Add(std::shared_ptr<Node> node) {
 
     this->rect.Union(node->rect);
     this->child.push_back(std::move(node));
+}
+
+std::shared_ptr<Node> Node::Clone() const {
+    auto thisRoot = this->shared_from_this();
+    auto thisParent = this->parent.lock();
+
+    while (thisParent) {
+        thisRoot = thisParent;
+        thisParent = thisRoot->parent.lock();
+    }
+
+    auto clone = std::make_shared<Node>();
+
+    Node::Copy(thisRoot, clone, *this);
+
+    return clone;
+}
+
+bool Node::CompareContent(const std::shared_ptr<const Node> &other) const {
+    bool same = false;
+
+    same =
+        this->rect == other->rect
+        && this->hasData == other->hasData
+        && this->child.size() == other->child.size();
+
+    for (size_t i = 0; same && i < this->child.size(); i++) {
+        same = same && this->child[i]->CompareContent(other->child[i]);
+    }
+
+    return same;
 }
 
 std::shared_ptr<Node> Node::Copy(const std::shared_ptr<const Node> &other, const std::shared_ptr<Node> &_this, const Node &replaceWithThis) {

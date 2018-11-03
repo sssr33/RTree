@@ -10,7 +10,7 @@ struct Node : std::enable_shared_from_this<Node> {
     Node();
     Node(Rect rect);
     Node(Rect rect, bool hasData);
-    Node(const Node &other);
+    Node(const Node &) = delete;
     Node(Node &&other);
 
     Node &operator=(Node other);
@@ -25,6 +25,10 @@ struct Node : std::enable_shared_from_this<Node> {
     size_t Count() const;
 
     void Add(std::shared_ptr<Node> node);
+
+    std::shared_ptr<Node> Clone() const;
+
+    bool CompareContent(const std::shared_ptr<const Node> &other) const;
 
     std::vector<std::shared_ptr<Node>> child;
     std::weak_ptr<Node> parent;
