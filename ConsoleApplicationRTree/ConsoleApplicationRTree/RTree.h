@@ -6,13 +6,17 @@
 class RTree {
 public:
     RTree(size_t minEntryCount, size_t maxEntryCount);
+    RTree(const RTree &other);
+    RTree(RTree &&other);
     ~RTree();
 
-    void Insert(Rect entry);
+    RTree &operator=(RTree other);
 
-    const std::shared_ptr<const Node> GetRoot() const {
-        return this->root;
-    }
+    friend void swap(RTree &a, RTree &b);
+
+    const std::shared_ptr<const Node> GetRoot() const;
+
+    void Insert(Rect entry);
 
 private:
     size_t minEntryCount;

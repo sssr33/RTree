@@ -13,8 +13,36 @@ RTree::RTree(size_t minEntryCount, size_t maxEntryCount)
 
 }
 
-RTree::~RTree()
+RTree::RTree(const RTree &other)
+    : minEntryCount(other.minEntryCount)
+    , maxEntryCount(other.maxEntryCount)
+    , root(other.root->Clone())
 {}
+
+RTree::RTree(RTree &&other)
+    : RTree(1, 1)
+{
+    swap(*this, other);
+}
+
+RTree::~RTree() {
+}
+
+RTree &RTree::operator=(RTree other) {
+    swap(*this, other);
+    return *this;
+}
+
+void swap(RTree &a, RTree &b) {
+    using std::swap;
+    swap(a.minEntryCount, b.minEntryCount);
+    swap(a.maxEntryCount, b.maxEntryCount);
+    swap(a.root, b.root);
+}
+
+const std::shared_ptr<const Node> RTree::GetRoot() const {
+    return this->root;
+}
 
 void RTree::Insert(Rect entry) {
     //std::shared_ptr<Node> leaf2;
