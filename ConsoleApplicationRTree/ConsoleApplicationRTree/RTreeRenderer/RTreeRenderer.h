@@ -21,4 +21,8 @@ private:
 
     void InitDrawTree(const RTree &tree);
     void DrawTree(const RTree &tree);
+
+    void DrawSimple(const RTree &tree);
+
+    static void FillRects(int level, const std::shared_ptr<const Node> &node, std::vector<D2D1_RECT_F> &rects);
 };
