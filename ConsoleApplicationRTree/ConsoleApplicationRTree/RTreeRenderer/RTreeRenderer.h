@@ -10,7 +10,15 @@ public:
     void Render() override;
     void OutputParametersChanged() override;
 
+    void SetTree(RTree tree);
+
 private:
     thread::critical_section cs;
-    RTree tree;
+    std::shared_ptr<RTree> rtree;
+    bool initDrawTree;
+
+    Microsoft::WRL::ComPtr<ID3D11Buffer> boxGeom;
+
+    void InitDrawTree(const RTree &tree);
+    void DrawTree(const RTree &tree);
 };
