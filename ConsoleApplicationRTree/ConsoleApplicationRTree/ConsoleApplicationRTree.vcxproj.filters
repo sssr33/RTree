@@ -19,4 +19,8 @@
     <ClInclude Include="RTreeRenderer\RTreeWindow.h" />
     <ClInclude Include="RTreeRenderer\RTreeRenderer.h" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="RTreeRenderer\vs.hlsl" />
+    <FxCompile Include="RTreeRenderer\ps.hlsl" />
+  </ItemGroup>
 </Project>

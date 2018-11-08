@@ -72,12 +72,11 @@ void HwndOutput::Resize() {
 }
 
 void HwndOutput::BeginRender() {
-    auto rtView = this->GetD3DRtView();
-    ID3D11RenderTargetView *const targets[1] = { this->GetD3DRtView() };
+    //auto rtView = this->GetD3DRtView();
+    //ID3D11RenderTargetView *const targets[1] = { this->GetD3DRtView() };
     //auto ctx = this->dxDev->GetContext();
-    auto dxLk = this->dxDev->LockCtxScoped();
+    //auto dxLk = this->dxDev->LockCtxScoped();
 
-    this->dxDev->D3D()->OMSetRenderTargets(1, targets, nullptr);
     //this->dxDev->D3D()->ClearRenderTargetView(this->GetD3DRtView(), DirectX::Colors::Transparent);
 }
 
@@ -228,10 +227,12 @@ void HwndOutput::CreateTargetViews() {
 
     {
         auto viewport = this->GetD3DViewport();
+        ID3D11RenderTargetView *const targets[1] = { this->GetD3DRtView() };
         //auto ctx = this->dxDev->GetContext();
         auto dxLk = this->dxDev->LockCtxScoped();
 
         this->dxDev->D3D()->RSSetViewports(1, &viewport);
+        this->dxDev->D3D()->OMSetRenderTargets(1, targets, nullptr);
 
         this->dxDev->D2D()->SetTarget(this->d2dTargetBitmap.Get());
         this->dxDev->D2D()->SetDpi(this->logicalDpi, this->logicalDpi);
