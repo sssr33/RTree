@@ -3,6 +3,8 @@
 
 #include <libhelpers/HSystem.h>
 #include <libhelpers/HMath.h>
+#include <libhelpers/HColor.h>
+#include <libhelpers/Structs.h>
 
 RTreeRenderer::RTreeRenderer(DxDevice *dxDev, IOutput *output)
     : IRenderer(dxDev, output)
@@ -104,18 +106,18 @@ void RTreeRenderer::DrawSimple(const RTree &tree) {
 void RTreeRenderer::Init3D(const RTree &tree) {
     this->nodeRects.clear();
 
-    this->InitNodeRects(tree.GetRoot());
+    this->InitNodeRects(tree.GetRoot(), 0, 2.f);
 
-    const float AddHeightPerLevel = 0.1f;
+    const float AddHeightPerLevel = 2.f;// 0.1f;
 
     for (size_t i = 1; i < this->nodeRects.size(); i++) {
         size_t level = this->nodeRects.size() - 1 - i;
-        float heightInc = (float)i * AddHeightPerLevel;
-        float posInc = heightInc / 2.f;
+        float heightInc = (float)i *AddHeightPerLevel;
+        float posInc = heightInc;// heightInc / 2.f;
 
         for (auto &tr : this->nodeRects[level]) {
             tr.pos.y += posInc;
-            tr.scale.y += heightInc;
+            //tr.scale.y += heightInc;
         }
     }
 
@@ -164,13 +166,14 @@ void RTreeRenderer::InitBoxVertices() {
     H::System::ThrowIfFailed(hr);
 
     D3D11_INPUT_ELEMENT_DESC inputDesc[] = {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
     hr = d3dDev->CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), vsData.data(), vsData.size(), this->vsInputLayout.GetAddressOf());
     H::System::ThrowIfFailed(hr);
 
-    this->vsCBuffer = this->CreateCBuffer(sizeof(DirectX::XMMATRIX));
+    this->vsCBuffer = this->CreateCBuffer(sizeof(VSCBuf));
 
     DirectX::XMFLOAT3 pos[] = {
         // front
@@ -212,12 +215,36 @@ void RTreeRenderer::InitBoxVertices() {
         2, 3, 7,
     };
 
-    std::vector<DirectX::XMFLOAT3> posVec;
+    std::vector<Vertex> posVec;
 
     posVec.reserve(ARRAYSIZE(cubeIdx));
 
+    Structs::Rgba topColor;
+    Structs::Rgba bottomColor;
+
+    {
+        auto tmp = H::Color::PremultiplyColor({1.f, 1.f, 1.f, 1.f});
+        topColor = Structs::Rgba(tmp.x, tmp.y, tmp.z, tmp.w);
+    }
+
+    {
+        auto tmp = H::Color::PremultiplyColor({ 1.f, 1.f, 1.f, 0.0f });
+        bottomColor = Structs::Rgba(tmp.x, tmp.y, tmp.z, tmp.w);
+    }
+
     for (auto &i : cubeIdx) {
-        posVec.push_back(pos[i]);
+        Vertex vtx;
+
+        vtx.pos = pos[i];
+
+        if (vtx.pos.y > 0.f) {
+            vtx.color = topColor.val;
+        }
+        else {
+            vtx.color = bottomColor.val;
+        }
+
+        posVec.push_back(vtx);
     }
 
     this->boxStride = (uint32_t)sizeof(decltype(posVec)::value_type);
@@ -261,12 +288,14 @@ void RTreeRenderer::InitRasterizerState() {
     HRESULT hr = S_OK;
     auto d3dDev = this->dxDev->GetD3DDevice();
 
-    this->rsState = nullptr;
+    this->rsStateDrawBack = nullptr;
+    this->rsStateDrawFront = nullptr;
 
     D3D11_RASTERIZER_DESC desc;
 
-    desc.FillMode = D3D11_FILL_WIREFRAME;
-    desc.CullMode = D3D11_CULL_BACK;
+    //desc.FillMode = D3D11_FILL_WIREFRAME;
+    desc.FillMode = D3D11_FILL_SOLID;
+    desc.CullMode = D3D11_CULL_FRONT;
     desc.FrontCounterClockwise = FALSE;
     desc.DepthBias = 0;
     desc.SlopeScaledDepthBias = 0.f;
@@ -276,7 +305,12 @@ void RTreeRenderer::InitRasterizerState() {
     desc.MultisampleEnable = FALSE;
     desc.AntialiasedLineEnable = FALSE;
 
-    hr = d3dDev->CreateRasterizerState(&desc, this->rsState.GetAddressOf());
+    hr = d3dDev->CreateRasterizerState(&desc, this->rsStateDrawBack.GetAddressOf());
+    H::System::ThrowIfFailed(hr);
+
+    desc.CullMode = D3D11_CULL_BACK;
+
+    hr = d3dDev->CreateRasterizerState(&desc, this->rsStateDrawFront.GetAddressOf());
     H::System::ThrowIfFailed(hr);
 }
 
@@ -319,12 +353,14 @@ void RTreeRenderer::InitBlendState() {
         i.BlendEnable = FALSE;
     }
 
+    // alpha blending for pre-multiplied alpha
+    desc.RenderTarget[0].BlendEnable = TRUE;
     desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-    desc.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
+    desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
     desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 
     desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-    desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
     desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 
     desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
@@ -353,21 +389,87 @@ Microsoft::WRL::ComPtr<ID3D11Buffer> RTreeRenderer::CreateCBuffer(size_t size) {
 }
 
 void RTreeRenderer::Draw3D() {
+    this->SetCubeState();
+
+    DirectX::XMVECTORF32 colors[] = {
+        DirectX::Colors::Cyan,
+        DirectX::Colors::Magenta,
+        DirectX::Colors::Yellow,
+        DirectX::Colors::Blue,
+        DirectX::Colors::LawnGreen,
+        DirectX::Colors::Red,
+        DirectX::Colors::Black,
+        DirectX::Colors::MintCream,
+        DirectX::Colors::Navy,
+        DirectX::Colors::Turquoise,
+        DirectX::Colors::PaleVioletRed,
+        DirectX::Colors::DimGray,
+        DirectX::Colors::Tan,
+    };
+
+    uint32_t colorIdx = 0;
+
+    struct ColoredRect {
+        const Transform *tr;
+        const DirectX::XMVECTORF32 *color;
+    };
+
+    DirectX::XMFLOAT3 cameraPos = { 8.f, 5.f, -10.f };
+    DirectX::XMFLOAT3 cameraDir = { 0.f, 0.f, 1.f };
+
+    std::vector<ColoredRect> rects;
+
+    for (size_t l = 0; l < this->nodeRects.size(); l++) {
+        auto &level = this->nodeRects[l];
+
+        for (size_t i = 0; i < level.size(); i++) {
+            auto &tr = level[i];
+            auto &color = colors[colorIdx];
+
+            colorIdx++;
+            colorIdx %= ARRAYSIZE(colors);
+
+            ColoredRect coloredRect;
+
+            coloredRect.tr = &tr;
+            coloredRect.color = &color;
+
+            rects.push_back(coloredRect);
+        }
+    }
+
+    std::sort(rects.begin(), rects.end(), [&](const ColoredRect &a, const ColoredRect &b) {
+        auto aPos = DirectX::XMLoadFloat3(&a.tr->pos);
+        auto bPos = DirectX::XMLoadFloat3(&b.tr->pos);
+        auto camPos = DirectX::XMLoadFloat3(&cameraPos);
+
+        auto aDist = DirectX::XMVectorGetX(DirectX::XMVector3LengthSq(DirectX::XMVectorSubtract(camPos, aPos)));
+        auto bDist = DirectX::XMVectorGetX(DirectX::XMVector3LengthSq(DirectX::XMVectorSubtract(camPos, bPos)));
+
+        return aDist > bDist;
+    });
+
+    int stop = 32;
+
+    auto drawTree = [&]() {
+        for (auto &i : rects) {
+            this->DrawCube(*i.tr, cameraPos, cameraDir, i.color->f);
+        }
+    };
+
     auto d3dCtx = this->dxDev->D3D();
 
-    {
-        DirectX::XMMATRIX transform = DirectX::XMMatrixIdentity();
+    d3dCtx->RSSetState(this->rsStateDrawBack.Get());
 
-        transform = DirectX::XMMatrixMultiply(transform, DirectX::XMMatrixTranslation(-1.f, 1.f, 2.f));
+    drawTree();
 
-        auto outputSize = this->output->GetLogicalSize();
+    d3dCtx->RSSetState(this->rsStateDrawFront.Get());
 
-        auto proj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(90.f), outputSize.x / outputSize.y, 0.1f, 10.f);
+    drawTree();
+}
 
-        auto mvp = DirectX::XMMatrixMultiplyTranspose(transform, proj);
-
-        d3dCtx->UpdateSubresource(this->vsCBuffer.Get(), 0, nullptr, &mvp, 0, 0);
-    }
+void RTreeRenderer::SetCubeState() {
+    auto d3dCtx = this->dxDev->D3D();
 
     d3dCtx->ClearRenderTargetView(this->output->GetD3DRtView(), DirectX::Colors::Goldenrod);
 
@@ -387,9 +489,41 @@ void RTreeRenderer::Draw3D() {
     d3dCtx->PSSetConstantBuffers(0, 1, this->psCBuffer.GetAddressOf());
     d3dCtx->PSSetShader(this->ps.Get(), nullptr, 0);
 
-    d3dCtx->RSSetState(this->rsState.Get());
     d3dCtx->OMSetDepthStencilState(this->dsState.Get(), 0);
     d3dCtx->OMSetBlendState(this->blendState.Get(), DirectX::Colors::White.f, 0xFF);
+}
+
+void RTreeRenderer::DrawCube(
+    const Transform &tr,
+    const DirectX::XMFLOAT3 &camPos,
+    const DirectX::XMFLOAT3 &camDir,
+    const float(&color)[4])
+{
+    auto d3dCtx = this->dxDev->D3D();
+
+    {
+        VSCBuf cbuf;
+
+        DirectX::XMMATRIX transform = DirectX::XMMatrixScaling(tr.scale.x, tr.scale.y, tr.scale.z);
+
+        transform = DirectX::XMMatrixMultiply(transform, DirectX::XMMatrixTranslation(tr.pos.x, tr.pos.y, tr.pos.z));
+
+        auto outputSize = this->output->GetLogicalSize();
+
+        auto view = DirectX::XMMatrixLookToLH(
+            DirectX::XMVectorSet(camPos.x, camPos.y, camPos.z, 1.f),
+            DirectX::XMVector3Normalize(DirectX::XMVectorSet(camDir.x, camDir.y, camDir.z, 0.f)),
+            DirectX::g_XMIdentityR1);
+
+        auto proj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(90.f), outputSize.x / outputSize.y, 0.1f, 100.f);
+
+        auto mvp = DirectX::XMMatrixMultiply(transform, view);
+        cbuf.mvp = DirectX::XMMatrixMultiplyTranspose(mvp, proj);
+
+        std::copy(std::begin(color), std::end(color), cbuf.color.begin());
+
+        d3dCtx->UpdateSubresource(this->vsCBuffer.Get(), 0, nullptr, &cbuf, 0, 0);
+    }
 
     d3dCtx->Draw(this->boxVertexCount, 0);
 }

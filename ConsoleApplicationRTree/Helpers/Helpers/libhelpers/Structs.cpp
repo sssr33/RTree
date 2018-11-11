@@ -49,12 +49,12 @@ namespace Structs {
 	Rgba::Rgba()
 		: val(0) {}
 
-	Rgba::Rgba(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-		: r(r), g(g), b(b), a(a) {}
+	Rgba::Rgba(int r, int g, int b, int a)
+		: r((uint8_t)r), g((uint8_t)g), b((uint8_t)b), a((uint8_t)a) {}
 
 	Rgba::Rgba(float r, float g, float b, float a)
-		: r((uint8_t)(r / 255.0f)), g((uint8_t)(g / 255.0f)),
-		b((uint8_t)(b / 255.0f)), a((uint8_t)(a / 255.0f)) {}
+		: r((uint8_t)(r * 255.0f)), g((uint8_t)(g * 255.0f)),
+		b((uint8_t)(b * 255.0f)), a((uint8_t)(a * 255.0f)) {}
 
 
 

@@ -1,11 +1,22 @@
 #pragma once
 #include "../RTree.h"
 
+#include <array>
 #include <libhelpers/Dx/Renderer/IRenderer.h>
 
 struct Transform {
     DirectX::XMFLOAT3 pos;
     DirectX::XMFLOAT3 scale;
+};
+
+struct VSCBuf {
+    DirectX::XMMATRIX mvp;
+    std::array<float, 4> color;
+};
+
+struct Vertex {
+    DirectX::XMFLOAT3 pos;
+    uint32_t color;
 };
 
 class RTreeRenderer : public IRenderer {
@@ -31,7 +42,8 @@ private:
     Microsoft::WRL::ComPtr<ID3D11VertexShader> vs;
     Microsoft::WRL::ComPtr<ID3D11Buffer> psCBuffer;
     Microsoft::WRL::ComPtr<ID3D11PixelShader> ps;
-    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rsState;
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rsStateDrawBack;
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rsStateDrawFront;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> dsState;
     Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
 
@@ -51,6 +63,12 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> CreateCBuffer(size_t size);
 
     void Draw3D();
+    void SetCubeState();
+    void DrawCube(
+        const Transform &tr,
+        const DirectX::XMFLOAT3 &camPos,
+        const DirectX::XMFLOAT3 &camDir,
+        const float (&color)[4]);
 
     static void FillRects(int level, const std::shared_ptr<const Node> &node, std::vector<D2D1_RECT_F> &rects);
 };
