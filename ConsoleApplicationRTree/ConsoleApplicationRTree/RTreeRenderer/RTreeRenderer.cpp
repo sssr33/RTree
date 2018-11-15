@@ -219,11 +219,14 @@ void RTreeRenderer::InitBoxVertices() {
 
     posVec.reserve(ARRAYSIZE(cubeIdx));
 
+    this->cubeVertices.assign(std::begin(pos), std::end(pos));
+    this->cubeIndexes.assign(std::begin(cubeIdx), std::end(cubeIdx));
+
     Structs::Rgba topColor;
     Structs::Rgba bottomColor;
 
     {
-        auto tmp = H::Color::PremultiplyColor({1.f, 1.f, 1.f, 1.f});
+        auto tmp = H::Color::PremultiplyColor({ 1.f, 1.f, 1.f, 1.f });
         topColor = Structs::Rgba(tmp.x, tmp.y, tmp.z, tmp.w);
     }
 
@@ -247,7 +250,7 @@ void RTreeRenderer::InitBoxVertices() {
         posVec.push_back(vtx);
     }
 
-    this->boxStride = (uint32_t)sizeof(decltype(posVec)::value_type);
+    this->boxStride = (uint32_t)sizeof(Vertex);
     this->boxVertexCount = (uint32_t)posVec.size();
 
     D3D11_BUFFER_DESC bufDesc;
@@ -526,6 +529,75 @@ void RTreeRenderer::DrawCube(
     }
 
     d3dCtx->Draw(this->boxVertexCount, 0);
+}
+
+void RTreeRenderer::TransformNodes(const DirectX::XMVECTOR &camPos) {
+    this->transformedCubeGeom.clear();
+
+    for (auto &level : this->nodeRects) {
+        for (auto &i : level) {
+            this->TransformBox(i);
+        }
+    }
+
+    this->SortTriangles(camPos);
+}
+
+void RTreeRenderer::TransformBox(const Transform &tr) {
+    assert(this->cubeIndexes.size() % 3 == 0);
+
+    Structs::Rgba topColor;
+    Structs::Rgba bottomColor;
+
+    {
+        auto tmp = H::Color::PremultiplyColor({ 1.f, 1.f, 1.f, 1.f });
+        topColor = Structs::Rgba(tmp.x, tmp.y, tmp.z, tmp.w);
+    }
+
+    {
+        auto tmp = H::Color::PremultiplyColor({ 1.f, 1.f, 1.f, 0.0f });
+        bottomColor = Structs::Rgba(tmp.x, tmp.y, tmp.z, tmp.w);
+    }
+
+    auto transform = DirectX::XMMatrixScaling(tr.scale.x, tr.scale.y, tr.scale.z);
+    transform = DirectX::XMMatrixMultiply(
+        transform,
+        DirectX::XMMatrixTranslation(tr.pos.x, tr.pos.y, tr.pos.z));
+
+    for (size_t i = 0; i < this->cubeIndexes.size(); i += 3) {
+        auto &v1tmp = this->cubeVertices[i + 0];
+        auto &v2tmp = this->cubeVertices[i + 1];
+        auto &v3tmp = this->cubeVertices[i + 2];
+        auto &c1 = v1tmp.y > 0.f ? topColor.val : bottomColor.val;
+        auto &c2 = v2tmp.y > 0.f ? topColor.val : bottomColor.val;
+        auto &c3 = v3tmp.y > 0.f ? topColor.val : bottomColor.val;
+        auto v1 = DirectX::XMLoadFloat3(&v1tmp);
+        auto v2 = DirectX::XMLoadFloat3(&v2tmp);
+        auto v3 = DirectX::XMLoadFloat3(&v3tmp);
+
+        v1 = DirectX::XMVector3TransformCoord(v1, transform);
+        v2 = DirectX::XMVector3TransformCoord(v2, transform);
+        v3 = DirectX::XMVector3TransformCoord(v3, transform);
+
+        Triangle triangle;
+
+        DirectX::XMStoreFloat3(&triangle.vtx[0].pos, v1);
+        DirectX::XMStoreFloat3(&triangle.vtx[1].pos, v2);
+        DirectX::XMStoreFloat3(&triangle.vtx[2].pos, v3);
+        triangle.vtx[0].color = c1;
+        triangle.vtx[1].color = c2;
+        triangle.vtx[2].color = c3;
+
+        this->transformedCubeGeom.push_back(std::move(triangle));
+    }
+}
+
+void RTreeRenderer::SortTriangles(const DirectX::XMVECTOR &camPos) {
+    /*std::sort(this->transformedCubeGeom.begin(), this->transformedCubeGeom.end(),
+        [&](const Triangle &a, const Triangle &b)
+    {
+
+    });*/
 }
 
 void RTreeRenderer::FillRects(int level, const std::shared_ptr<const Node> &node, std::vector<D2D1_RECT_F> &rects) {

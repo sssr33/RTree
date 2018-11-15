@@ -1,4 +1,5 @@
 #pragma once
+#include "Triangle.h"
 #include "../RTree.h"
 
 #include <array>
@@ -12,11 +13,6 @@ struct Transform {
 struct VSCBuf {
     DirectX::XMMATRIX mvp;
     std::array<float, 4> color;
-};
-
-struct Vertex {
-    DirectX::XMFLOAT3 pos;
-    uint32_t color;
 };
 
 class RTreeRenderer : public IRenderer {
@@ -33,6 +29,9 @@ private:
     std::shared_ptr<RTree> rtree;
     bool initDrawTree;
 
+    std::vector<DirectX::XMFLOAT3> cubeVertices;
+    std::vector<uint32_t> cubeIndexes;
+    std::vector<Triangle> transformedCubeGeom;
     std::vector<std::vector<Transform>> nodeRects;
     Microsoft::WRL::ComPtr<ID3D11Buffer> boxGeom;
     uint32_t boxStride;
@@ -69,6 +68,9 @@ private:
         const DirectX::XMFLOAT3 &camPos,
         const DirectX::XMFLOAT3 &camDir,
         const float (&color)[4]);
+    void TransformNodes(const DirectX::XMVECTOR &camPos);
+    void TransformBox(const Transform &tr);
+    void SortTriangles(const DirectX::XMVECTOR &camPos);
 
     static void FillRects(int level, const std::shared_ptr<const Node> &node, std::vector<D2D1_RECT_F> &rects);
 };

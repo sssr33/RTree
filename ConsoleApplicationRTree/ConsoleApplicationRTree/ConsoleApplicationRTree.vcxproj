@@ -174,6 +174,8 @@
     <ClInclude Include="RTree.h" />
     <ClInclude Include="RTreeRenderer\RTreeRenderer.h" />
     <ClInclude Include="RTreeRenderer\RTreeWindow.h" />
+    <ClInclude Include="RTreeRenderer\Triangle.h" />
+    <ClInclude Include="RTreeRenderer\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleApplicationRTree.cpp" />
@@ -189,6 +191,7 @@
     <ClCompile Include="RTree.cpp" />
     <ClCompile Include="RTreeRenderer\RTreeRenderer.cpp" />
     <ClCompile Include="RTreeRenderer\RTreeWindow.cpp" />
+    <ClCompile Include="RTreeRenderer\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Helpers\Helpers.sl.Desktop\Helpers.sl.Desktop.vcxproj">

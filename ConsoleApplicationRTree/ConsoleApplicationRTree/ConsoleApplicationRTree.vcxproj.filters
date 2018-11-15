@@ -9,6 +9,7 @@
     <ClCompile Include="Helpers.cpp" />
     <ClCompile Include="RTreeRenderer\RTreeWindow.cpp" />
     <ClCompile Include="RTreeRenderer\RTreeRenderer.cpp" />
+    <ClCompile Include="RTreeRenderer\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -18,6 +19,8 @@
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="RTreeRenderer\RTreeWindow.h" />
     <ClInclude Include="RTreeRenderer\RTreeRenderer.h" />
+    <ClInclude Include="RTreeRenderer\Vertex.h" />
+    <ClInclude Include="RTreeRenderer\Triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="RTreeRenderer\vs.hlsl" />
