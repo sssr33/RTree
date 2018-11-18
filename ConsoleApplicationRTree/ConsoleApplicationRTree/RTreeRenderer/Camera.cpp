@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Camera.h"
 
+#include <cmath>
+
 Camera::Camera()
     : position(0.f, 0.f, 0.f), viewVec(0.f, 0.f, 1.f)
 {}
@@ -140,24 +142,27 @@ void Camera::RotateView(const DirectX::XMVECTOR &axis, float rads, const DirectX
         float afterRotation = DirectX::XMVectorGetX(DirectX::XMVector3Dot(newView, *constraintPlaneN));
         float beforeRotation = DirectX::XMVectorGetX(DirectX::XMVector3Dot(view, *constraintPlaneN));
 
-        bool afterLessZero = afterRotation < 0.f;
-        bool beforeLessZero = beforeRotation < 0.f;
+        if (beforeRotation < 0.f) {
+            beforeRotation = -beforeRotation;
+            afterRotation = -afterRotation;
+        }
 
-        if (afterLessZero != beforeLessZero) {
-            float dest = 0.001f;
+        float dest = 0.001f;
 
-            if (beforeLessZero) {
-                dest = -dest;
+        if (afterRotation < dest) {
+            float destRads = -std::acos(dest);
+
+            auto tmpUp = DirectX::XMVector3Cross(axis, *constraintPlaneN);
+            tmpUp = DirectX::XMVector3Normalize(tmpUp);
+
+            float dUp = DirectX::XMVectorGetX(DirectX::XMVector3Dot(newView, tmpUp));
+
+            if (dUp > 0.f) {
+                destRads = -destRads;
             }
 
-            float one = afterRotation - beforeRotation;
-            float limit = dest - beforeRotation;
-
-            float t = limit / one;
-            rads *= t;
-
-            rotQuat = DirectX::XMQuaternionRotationAxis(axis, rads);
-            newView = DirectX::XMVector3Rotate(view, rotQuat);
+            rotQuat = DirectX::XMQuaternionRotationAxis(axis, destRads);
+            newView = DirectX::XMVector3Rotate(*constraintPlaneN, rotQuat);
         }
     }
 
