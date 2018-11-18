@@ -1,8 +1,11 @@
 #pragma once
+#include "Camera.h"
 #include "Triangle.h"
+#include "IInputController.h"
 #include "../RTree.h"
 
 #include <array>
+#include <libhelpers/StopWatch.h>
 #include <libhelpers/Dx/Renderer/IRenderer.h>
 
 struct Transform {
@@ -17,7 +20,8 @@ struct VSCBuf {
 
 class RTreeRenderer : public IRenderer {
 public:
-    RTreeRenderer(DxDevice *dxDev, IOutput *output);
+    RTreeRenderer(DxDevice *dxDev, IOutput *output,
+        std::unique_ptr<IInputController> inputController);
 
     void Render() override;
     void OutputParametersChanged() override;
@@ -29,6 +33,9 @@ private:
     std::shared_ptr<RTree> rtree;
     bool initDrawTree;
 
+    StopWatch watch;
+    Camera camera;
+    std::unique_ptr<IInputController> inputController;
     std::vector<DirectX::XMFLOAT3> cubeVertices;
     std::vector<uint32_t> cubeIndexes;
     std::vector<Triangle> transformedCubeGeom;
@@ -65,8 +72,7 @@ private:
     void SetCubeState();
     void DrawCube(
         const Transform &tr,
-        const DirectX::XMFLOAT3 &camPos,
-        const DirectX::XMFLOAT3 &camDir,
+        const DirectX::XMMATRIX &view,
         const float (&color)[4]);
     void TransformNodes(const DirectX::XMVECTOR &camPos);
     void TransformBox(const Transform &tr);

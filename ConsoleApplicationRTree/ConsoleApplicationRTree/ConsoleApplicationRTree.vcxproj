@@ -172,6 +172,9 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Rect.h" />
     <ClInclude Include="RTree.h" />
+    <ClInclude Include="RTreeRenderer\Camera.h" />
+    <ClInclude Include="RTreeRenderer\IInputController.h" />
+    <ClInclude Include="RTreeRenderer\InputController.h" />
     <ClInclude Include="RTreeRenderer\RTreeRenderer.h" />
     <ClInclude Include="RTreeRenderer\RTreeWindow.h" />
     <ClInclude Include="RTreeRenderer\Triangle.h" />
@@ -189,6 +192,8 @@
     </ClCompile>
     <ClCompile Include="Rect.cpp" />
     <ClCompile Include="RTree.cpp" />
+    <ClCompile Include="RTreeRenderer\Camera.cpp" />
+    <ClCompile Include="RTreeRenderer\InputController.cpp" />
     <ClCompile Include="RTreeRenderer\RTreeRenderer.cpp" />
     <ClCompile Include="RTreeRenderer\RTreeWindow.cpp" />
     <ClCompile Include="RTreeRenderer\Triangle.cpp" />

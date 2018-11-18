@@ -110,18 +110,29 @@ void WindowMain::WndThreadMain(WindowInitData *initData) {
 
     if (!initFailed) {
         MSG msg;
-        BOOL ret;
+        bool quit = false;
 
-        // nullptr to process window messages and thread messages.
-        // fixes bug when you can't change language(shift+alt or shift+ctrl)
-        while ((ret = GetMessageW(&msg, nullptr, 0, 0)) != 0) {
-            if (ret == -1) {
-                // handle the error and possibly exit
-                break;
+        // https://weblogs.asp.net/kennykerr/parallel-programming-with-c-part-2-asynchronous-procedure-calls-and-window-messages
+        while (!quit) {
+            DWORD result = MsgWaitForMultipleObjectsEx(0, nullptr, INFINITE, QS_ALLINPUT, MWMO_ALERTABLE | MWMO_INPUTAVAILABLE);
+
+            if (WAIT_FAILED == result) {
+                auto msg = std::string() + "MsgWaitForMultipleObjectsEx failed " + std::to_string(GetLastError());
+                H::System::DebugOutput(msg);
+                continue;
             }
-            else {
-                TranslateMessage(&msg);
-                DispatchMessageW(&msg);
+
+            assert(WAIT_IO_COMPLETION == result || WAIT_OBJECT_0 == result);
+
+            if (WAIT_OBJECT_0 == result) {
+                while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+                    TranslateMessage(&msg);
+                    DispatchMessageW(&msg);
+
+                    if (WM_QUIT == msg.message) {
+                        quit = true;
+                    }
+                }
             }
         }
     }

@@ -110,6 +110,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\TypeConverterCP.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\typeswitch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UniqueHandle.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UnkGenericAction.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UPtrVirtualDeleter.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UtfConvert.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\var_ptr.h" />

@@ -6,14 +6,33 @@
 #include <libhelpers/HColor.h>
 #include <libhelpers/Structs.h>
 
-RTreeRenderer::RTreeRenderer(DxDevice *dxDev, IOutput *output)
+RTreeRenderer::RTreeRenderer(DxDevice *dxDev, IOutput *output,
+    std::unique_ptr<IInputController> inputController)
     : IRenderer(dxDev, output)
     , initDrawTree(true)
+    , inputController(std::move(inputController))
     , boxStride(0)
     , boxVertexCount(0)
-{}
+{
+    this->camera.SetPosition(DirectX::XMFLOAT3({ 8.f, 5.f, -10.f }));
+}
 
 void RTreeRenderer::Render() {
+    float elapsed = this->watch.Elapsed<float>();
+    this->watch.Start();
+    elapsed = (std::min)(elapsed, 1.f / 15.f);
+
+    this->inputController->Update(elapsed);
+
+    {
+        auto move = this->inputController->GetMove();
+        auto turn = this->inputController->GetTurn();
+
+        this->camera.Move(move);
+        this->camera.TurnLeft(turn.x);
+        this->camera.TurnUp(turn.y);
+    }
+
     auto ctxLk = this->dxDev->LockCtxScoped();
     auto d2dCtx = this->dxDev->D2D();
 
@@ -417,8 +436,7 @@ void RTreeRenderer::Draw3D() {
         const DirectX::XMVECTORF32 *color;
     };
 
-    DirectX::XMFLOAT3 cameraPos = { 8.f, 5.f, -10.f };
-    DirectX::XMFLOAT3 cameraDir = { 0.f, 0.f, 1.f };
+    DirectX::XMFLOAT3 cameraPos = this->camera.GetPosition();
 
     std::vector<ColoredRect> rects;
 
@@ -452,11 +470,11 @@ void RTreeRenderer::Draw3D() {
         return aDist > bDist;
     });
 
-    int stop = 32;
+    auto view = this->camera.GetCameraMatrix();
 
     auto drawTree = [&]() {
         for (auto &i : rects) {
-            this->DrawCube(*i.tr, cameraPos, cameraDir, i.color->f);
+            this->DrawCube(*i.tr, view, i.color->f);
         }
     };
 
@@ -498,8 +516,7 @@ void RTreeRenderer::SetCubeState() {
 
 void RTreeRenderer::DrawCube(
     const Transform &tr,
-    const DirectX::XMFLOAT3 &camPos,
-    const DirectX::XMFLOAT3 &camDir,
+    const DirectX::XMMATRIX &view,
     const float(&color)[4])
 {
     auto d3dCtx = this->dxDev->D3D();
@@ -512,11 +529,6 @@ void RTreeRenderer::DrawCube(
         transform = DirectX::XMMatrixMultiply(transform, DirectX::XMMatrixTranslation(tr.pos.x, tr.pos.y, tr.pos.z));
 
         auto outputSize = this->output->GetLogicalSize();
-
-        auto view = DirectX::XMMatrixLookToLH(
-            DirectX::XMVectorSet(camPos.x, camPos.y, camPos.z, 1.f),
-            DirectX::XMVector3Normalize(DirectX::XMVectorSet(camDir.x, camDir.y, camDir.z, 0.f)),
-            DirectX::g_XMIdentityR1);
 
         auto proj = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(90.f), outputSize.x / outputSize.y, 0.1f, 100.f);
 

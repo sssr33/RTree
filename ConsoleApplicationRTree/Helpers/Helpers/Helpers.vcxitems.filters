@@ -97,6 +97,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\meta\VisBase.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\Containers\PolyVector.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\fnv1.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)libhelpers\UnkGenericAction.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)libhelpers\Thread\critical_section.cpp" />

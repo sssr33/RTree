@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "RTreeWindow.h"
+#include "InputController.h"
 
 RTreeWindow::RTreeWindow(WindowBaseData &baseData)
     : Window(baseData)
@@ -15,7 +16,10 @@ ProcessMsgResult RTreeWindow::ProcessMsg(uint32_t msg, WPARAM wparam, LPARAM lpa
 
     switch (msg) {
     case WM_CREATE: {
-        this->renderer = std::make_unique<HwndRenderer<RTreeRenderer>>(this->GetHwnd());
+        auto hwnd = this->GetHwnd();
+        auto inputController = std::make_unique<InputController>(hwnd);
+
+        this->renderer = std::make_unique<HwndRenderer<RTreeRenderer>>(hwnd, std::move(inputController));
         this->renderer->ContinueRendering();
         break;
     }
